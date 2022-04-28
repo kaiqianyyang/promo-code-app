@@ -27,7 +27,7 @@ function Offers() {
         // Get reference
         const listingsRef = collection(db, "listings");
 
-        // Create query: rent or sell
+        // Create query: dog or cat
         const q = query(
           listingsRef,
           where("offer", "==", true),
@@ -66,7 +66,7 @@ function Offers() {
       // Get reference
       const listingsRef = collection(db, "listings");
 
-      // Create query: rent or sell
+      // Create query: dog or cat
       const q = query(
         listingsRef,
         where("offer", "==", true),

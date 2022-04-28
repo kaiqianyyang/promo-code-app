@@ -28,7 +28,7 @@ function Category() {
         // Get reference
         const listingsRef = collection(db, "listings");
 
-        // Create query: rent or sell
+        // Create query: dog or cat
         const q = query(
           listingsRef,
           where("type", "==", params.categoryName),
@@ -67,7 +67,7 @@ function Category() {
       // Get reference
       const listingsRef = collection(db, "listings");
 
-      // Create query: rent or sell
+      // Create query: dog or cat
       const q = query(
         listingsRef,
         where("type", "==", params.categoryName),
@@ -103,9 +103,9 @@ function Category() {
     <div className="category">
       <header>
         <p className="pageHeader">
-          {params.categoryName === "rent"
-            ? "Places for rent"
-            : "Places for sale"}
+          {params.categoryName === "dog"
+            ? "Dog sales"
+            : "Cat sales"}
         </p>
       </header>
 

@@ -18,7 +18,7 @@ function CreateListing() {
   const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    type: 'rent',
+    type: 'dog',
     name: '',
     bedrooms: 1,
     bathrooms: 1,
@@ -230,25 +230,25 @@ function CreateListing() {
 
       <main>
         <form onSubmit={onSubmit}>
-          <label className="formLabel">Sell / Rent</label>
+          <label className="formLabel">Cat / Dog</label>
           <div className="formButtons">
             <button
               type="button"
-              className={type === 'sale' ? 'formButtonActive' : 'formButton'}
+              className={type === 'cat' ? 'formButtonActive' : 'formButton'}
               id="type"
-              value="sale"
+              value="cat"
               onClick={onMutate}
             >
-              Sell
+              Cat
             </button>
             <button
               type="button"
-              className={type === 'rent' ? 'formButtonActive' : 'formButton'}
+              className={type === 'dog' ? 'formButtonActive' : 'formButton'}
               id="type"
-              value="rent"
+              value="dog"
               onClick={onMutate}
             >
-              Rent
+              Dog
             </button>
           </div>
 
@@ -418,7 +418,7 @@ function CreateListing() {
               max="750000000"
               required
             />
-            {type === 'rent' && <p className="formPriceText">$ / Month</p>}
+            {type === 'dog' && <p className="formPriceText">$ / Month</p>}
           </div>
 
           {offer && (
