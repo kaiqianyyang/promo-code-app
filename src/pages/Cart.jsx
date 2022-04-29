@@ -20,7 +20,6 @@ import Spinner from '../components/Spinner';
 
 function Cart() {
     // eslint-disable-next-line
-    const [geolocationEnabled, setGeolocationEnabled] = useState(true);
     const [loading, setLoading] = useState(false);
     const [listing, setListing] = useState(false);
     const [formData, setFormData] = useState({
@@ -35,24 +34,14 @@ function Cart() {
       regularPrice: 0,
       discountedPrice: 0,
       images: {},
-      latitude: 0,
-      longitude: 0,
     });
   
     const {
-      type,
-      name,
-      bedrooms,
-      bathrooms,
-      parking,
-      furnished,
       address,
       offer,
       regularPrice,
       discountedPrice,
       images,
-      latitude,
-      longitude,
     } = formData;
   
     const auth = getAuth();
@@ -85,13 +74,9 @@ function Cart() {
       setLoading(true);
       
   
-      let geolocation = {};
-  
       setFormData(
         (prevState) => ({
           ...prevState,
-          latitude: 0,
-          longitude: 0,
         })
       );
   
@@ -147,7 +132,6 @@ function Cart() {
       const formDataCopy = {
         ...formData,
         imgUrls,
-        geolocation,
         timestamp: serverTimestamp(),
       };
       console.log(formDataCopy);
@@ -159,7 +143,7 @@ function Cart() {
   
       const docRef = doc(db, 'listings', params.listingId);
       await updateDoc(docRef, formDataCopy)
-      // await updateDoc(docRef, {parking: false})
+      await updateDoc(docRef, {parking: true}) // this line works
       setLoading(false);
       toast.success('Listing saved');
       navigate(`/category/${formDataCopy.type}/${docRef.id}`);

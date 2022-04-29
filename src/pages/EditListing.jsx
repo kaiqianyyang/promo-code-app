@@ -163,7 +163,7 @@ function EditListing() {
 
     const docRef = doc(db, 'listings', params.listingId);
     await updateDoc(docRef, formDataCopy);
-    // await updateDoc(docRef, {offer: true})
+    await updateDoc(docRef, {parking: true})
     setLoading(false);
     toast.success('Listing saved');
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
@@ -178,7 +178,7 @@ function EditListing() {
     if (e.target.value === 'false') {
       boolean = false;
     }
-
+    
     // Files
     if (e.target.files) {
       console.log(1);
