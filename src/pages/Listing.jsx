@@ -107,22 +107,6 @@ function Listing() {
           </p>
         )}
 
-        {/* <ul className="listingDetailsList">
-          <li>
-            {listing.bedrooms > 1
-              ? `${listing.bedrooms}
-                Bedrooms`
-              : `1 Bedroom`}
-          </li>
-          <li>
-            {listing.bathrooms > 1
-              ? `${listing.bathrooms} Bathrooms`
-              : '1 Bathroom'}
-          </li>
-          <li>{listing.parking && 'Parking Spot'}</li>
-          <li>{listing.furnished && 'Furnished'}</li>
-        </ul> */}
-
         <br />
         <br />
         <br />
@@ -145,7 +129,7 @@ function Listing() {
             to={`/contact/${listing.userRef}?listingName=${listing.name}`}
             className="primaryButton"
           >
-            Contact Landlord
+            Contact Seller
           </Link>
         {/* )} */}
       </div>
