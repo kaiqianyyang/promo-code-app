@@ -345,43 +345,6 @@ function CreateListing() {
             </button>
           </div>
 
-          <label className="formLabel">Address</label>
-          <textarea
-            className="formInputAddress"
-            type="text"
-            id="address"
-            value={address}
-            onChange={onMutate}
-            required
-          />
-
-          {!geolocationEnabled && (
-            <div className="formLatLng flex">
-              <div>
-                <label className="formLabel">Latitude</label>
-                <input
-                  className="formInputSmall"
-                  type="number"
-                  id="latitude"
-                  value={latitude}
-                  onChange={onMutate}
-                  required
-                />
-              </div>
-              <div>
-                <label className="formLabel">Longitude</label>
-                <input
-                  className="formInputSmall"
-                  type="number"
-                  id="longitude"
-                  value={longitude}
-                  onChange={onMutate}
-                  required
-                />
-              </div>
-            </div>
-          )}
-
           <label className="formLabel">Offer</label>
           <div className="formButtons">
             <button
