@@ -702,9 +702,14 @@ button {
   align-items: center;
 }
 
+.priceText {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
 .listingText {
   margin-top: 3rem;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .lisitingsList {
