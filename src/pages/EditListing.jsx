@@ -15,7 +15,6 @@ import Spinner from '../components/Spinner';
 
 function EditListing() {
   // eslint-disable-next-line
-  const [geolocationEnabled, setGeolocationEnabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [listing, setListing] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,24 +29,16 @@ function EditListing() {
     regularPrice: 0,
     discountedPrice: 0,
     images: {},
-    latitude: 0,
-    longitude: 0,
   });
 
   const {
     type,
     name,
-    bedrooms,
-    bathrooms,
-    parking,
-    furnished,
     address,
     offer,
     regularPrice,
     discountedPrice,
     images,
-    latitude,
-    longitude,
   } = formData;
 
   const auth = getAuth();
@@ -105,25 +96,8 @@ function EditListing() {
 
     setLoading(true);
 
-    if (discountedPrice >= regularPrice) {
-      setLoading(false);
-      toast.error('Discounted price needs to be less than regular price');
-      return;
-    }
-
-    if (images.length > 6) {
-      setLoading(false);
-      toast.error('Max 6 images');
-      return;
-    }
-
-    let geolocation = {};
-    let location;
-
     setFormData((prevState) => ({
       ...prevState,
-      latitude: 0,
-      longitude: 0,
     }));
 
     // Store image in firebase
@@ -178,7 +152,6 @@ function EditListing() {
     const formDataCopy = {
       ...formData,
       imgUrls,
-      geolocation,
       timestamp: serverTimestamp(),
     };
     console.log(formDataCopy);
@@ -231,32 +204,11 @@ function EditListing() {
   return (
     <div className="profile">
       <header>
-        <p className="pageHeader">Edit Listing</p>
+        <p className="pageHeader">Update Product Information</p>
       </header>
 
       <main>
         <form onSubmit={onSubmit}>
-          <label className="formLabel">Cat / Dog</label>
-          <div className="formButtons">
-            <button
-              type="button"
-              className={type === 'cat' ? 'formButtonActive' : 'formButton'}
-              id="type"
-              value="cat"
-              onClick={onMutate}
-            >
-              Cat
-            </button>
-            <button
-              type="button"
-              className={type === 'dog' ? 'formButtonActive' : 'formButton'}
-              id="type"
-              value="dog"
-              onClick={onMutate}
-            >
-              Dog
-            </button>
-          </div>
 
           <label className="formLabel">Name</label>
           <input
@@ -269,124 +221,6 @@ function EditListing() {
             minLength="10"
             required
           />
-
-          <div className="formRooms flex">
-            <div>
-              <label className="formLabel">Bedrooms</label>
-              <input
-                className="formInputSmall"
-                type="number"
-                id="bedrooms"
-                value={bedrooms}
-                onChange={onMutate}
-                min="1"
-                max="50"
-                required
-              />
-            </div>
-            <div>
-              <label className="formLabel">Bathrooms</label>
-              <input
-                className="formInputSmall"
-                type="number"
-                id="bathrooms"
-                value={bathrooms}
-                onChange={onMutate}
-                min="1"
-                max="50"
-                required
-              />
-            </div>
-          </div>
-
-          <label className="formLabel">Parking spot</label>
-          <div className="formButtons">
-            <button
-              className={parking ? 'formButtonActive' : 'formButton'}
-              type="button"
-              id="parking"
-              value={true}
-              onClick={onMutate}
-              min="1"
-              max="50"
-            >
-              Yes
-            </button>
-            <button
-              className={
-                !parking && parking !== null ? 'formButtonActive' : 'formButton'
-              }
-              type="button"
-              id="parking"
-              value={false}
-              onClick={onMutate}
-            >
-              No
-            </button>
-          </div>
-
-          <label className="formLabel">Furnished</label>
-          <div className="formButtons">
-            <button
-              className={furnished ? 'formButtonActive' : 'formButton'}
-              type="button"
-              id="furnished"
-              value={true}
-              onClick={onMutate}
-            >
-              Yes
-            </button>
-            <button
-              className={
-                !furnished && furnished !== null
-                  ? 'formButtonActive'
-                  : 'formButton'
-              }
-              type="button"
-              id="furnished"
-              value={false}
-              onClick={onMutate}
-            >
-              No
-            </button>
-          </div>
-
-          <label className="formLabel">Address</label>
-          <textarea
-            className="formInputAddress"
-            type="text"
-            id="address"
-            value={address}
-            onChange={onMutate}
-            required
-          />
-
-          {!geolocationEnabled && (
-            <div className="formLatLng flex">
-              <div>
-                <label className="formLabel">Latitude</label>
-                <input
-                  className="formInputSmall"
-                  type="number"
-                  id="latitude"
-                  value={latitude}
-                  onChange={onMutate}
-                  required
-                />
-              </div>
-              <div>
-                <label className="formLabel">Longitude</label>
-                <input
-                  className="formInputSmall"
-                  type="number"
-                  id="longitude"
-                  value={longitude}
-                  onChange={onMutate}
-                  required
-                />
-              </div>
-            </div>
-          )}
 
           <label className="formLabel">Offer</label>
           <div className="formButtons">
@@ -424,7 +258,6 @@ function EditListing() {
               max="750000000"
               required
             />
-            {type === 'dog' && <p className="formPriceText">$ / Month</p>}
           </div>
 
           {offer && (
@@ -458,7 +291,7 @@ function EditListing() {
             required
           />
           <button type="submit" className="primaryButton createListingButton">
-            Edit Listing
+            Update Product Information
           </button>
         </form>
       </main>
