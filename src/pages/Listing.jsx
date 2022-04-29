@@ -59,7 +59,7 @@ function Listing() {
               <div
                 className="swiperSlideDiv"
                 style={{
-                  background: `url(${listing.imgUrls[index]}) center no-repeat`,
+                  background: `url(${listing.imgUrls[index] }) center no-repeat`,
                   backgroundSize: 'cover',
                 }}
               ></div>
@@ -127,26 +127,27 @@ function Listing() {
         <br />
         <br />
 
-        {auth.currentUser?.uid !== listing.userRef && (
+        {/* {auth.currentUser?.uid !== listing.userRef && ( */}
           <Link
-            to={`/cart/${params.listingId}/${listing.userRef}`}
+            // to={`/cart/${params.listingId}/${listing.userRef}`}
+            to={`/cart/${params.listingId}`}
             // to={`/cart/${listing.userRef}?listingName=${listing.name}`}
             className="primaryButton"
           >
             Add to cart
           </Link>
-        )}
+        {/* )} */}
 
         <br />
 
-        {auth.currentUser?.uid !== listing.userRef && (
+        {/* {auth.currentUser?.uid !== listing.userRef && ( */}
           <Link
             to={`/contact/${listing.userRef}?listingName=${listing.name}`}
             className="primaryButton"
           >
             Contact Landlord
           </Link>
-        )}
+        {/* )} */}
       </div>
     </main>
   );

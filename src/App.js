@@ -35,8 +35,8 @@ function App() {
             path='/category/:categoryName/:listingId'
             element={<Listing />}
           />
-          {/* <Route path='/cart/:listingId' element={<Cart />} /> */}
-          <Route path='/cart/:listingId/:landlordId' element={<Cart />} />
+          <Route path='/cart/:listingId' element={<Cart />} />
+          {/* <Route path='/cart/:listingId/:landlordId' element={<Cart />} /> */}
           <Route path='/contact/:landlordId' element={<Contact />} />
         </Routes>
         <Navbar />

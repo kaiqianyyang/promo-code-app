@@ -150,7 +150,7 @@ function Profile() {
 
       <Link to="/create-listing" className="createListing">
         <img src={homeIcon} alt="home" />
-        <p>Cat or dog your home</p>
+        <p>Sell Products</p>
         <img src={arrowRight} alt="arrow right" />
       </Link>
 
