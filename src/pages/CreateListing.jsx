@@ -19,10 +19,10 @@ function CreateListing() {
   const [formData, setFormData] = useState({
     type: 'dog',
     name: '',
-    bedrooms: 1,
-    bathrooms: 1,
-    parking: false,
-    furnished: false,
+    // bedrooms: 1,
+    // bathrooms: 1,
+    // parking: false,
+    // furnished: false,
     address: '',
     offer: false,
     regularPrice: 0,
@@ -251,7 +251,7 @@ function CreateListing() {
               id="regularPrice"
               value={regularPrice}
               onChange={onMutate}
-              min="50"
+              min="1"
               max="750000000"
               required
             />
@@ -266,7 +266,7 @@ function CreateListing() {
                 id="discountedPrice"
                 value={discountedPrice}
                 onChange={onMutate}
-                min="50"
+                min="1"
                 max="750000000"
                 required={offer}
               />

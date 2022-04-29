@@ -1,35 +1,23 @@
-import { useState, useEffect, useRef } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from 'firebase/storage';
+import { useState, useEffect } from 'react';
 import { doc, updateDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase.config';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { v4 as uuidv4 } from 'uuid'; // npm i uuid
 import Spinner from '../components/Spinner';
 
 function Cart() {
   // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    // type: 'dog',
-    // name: '',
     parking: true,
     used: true,
-    // address: '',
     promoCode: '',
     offer: false,
     regularPrice: 0,
     discountedPrice: 0,
-    // imgUrls: {},
   });
 
-  const { parking, used, promoCode, offer, regularPrice, discountedPrice } = formData;
+  const { used, promoCode, offer, regularPrice, discountedPrice } = formData;
 
   const navigate = useNavigate();
   const params = useParams();
@@ -73,7 +61,7 @@ function Cart() {
     const docRef = doc(db, 'listings', params.listingId);
     await updateDoc(docRef, formDataCopy);
     setLoading(false);
-    toast.success('Listing saved');
+    toast.success('Applied Promotion Code');
     navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
@@ -98,12 +86,24 @@ function Cart() {
       } 
       else {
         // one-time promo code
-        if (e.target.id === 'promoCode' && e.target.value === promoCode && used === false)
-        setFormData((prevState) => ({
-          ...prevState,
-          // ["parking"]: false, // test,
-          ["used"]: true,
-        }));
+        // try to apply promotion code
+        if (e.target.id === 'promoCode'){
+          // promotion code is valid
+          if (e.target.value === promoCode) {
+            // promotion code has not been used
+            if (used === false) {
+              setFormData((prevState) => ({
+                ...prevState,
+                // ["parking"]: false, // test,
+                ["used"]: true,
+              }));
+            } else {
+              toast.error('Promotion Code has been used.')
+            }
+          } else {
+            toast.error('Promotion Code is not valid');
+          }
+        }
       }
       
     }
@@ -116,7 +116,7 @@ function Cart() {
   return (
     <div className="profile">
       <header>
-        <p className="pageHeader">Add to cart</p>
+        <p className="pageHeader">Apply Promotion Code</p>
       </header>
 
       <main>
