@@ -75,11 +75,11 @@ function CreateListing() {
 
     setLoading(true);
 
-    if (discountedPrice >= regularPrice) {
-      setLoading(false);
-      toast.error('Discounted price needs to be less than regular price');
-      return;
-    }
+    // if (discountedPrice >= regularPrice) {
+    //   setLoading(false);
+    //   toast.error('Discounted price needs to be less than regular price');
+    //   return;
+    // }
 
     if (images.length > 6) {
       setLoading(false);
@@ -91,14 +91,14 @@ function CreateListing() {
     let location;
 
     if (geolocationEnabled) {
-      const response = await fetch(
-        // `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
-        // API_KEY=1464460052555b4bd2bfefce3107d85e
-        `https://api.positionstack.com/v1/forward?access_key=1464460052555b4bd2bfefce3107d85e&query=${address}`
-      );
+      // const response = await fetch(
+      //   // `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
+      //   // API_KEY=1464460052555b4bd2bfefce3107d85e
+      //   `https://api.positionstack.com/v1/forward?access_key=1464460052555b4bd2bfefce3107d85e&query=${address}`
+      // );
 
       //   console.log("location 111:");
-      const data = await response.json();
+      // const data = await response.json();
       // console.log(data);
 
       //   geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
@@ -106,10 +106,10 @@ function CreateListing() {
       setFormData(
         (prevState) => ({
           ...prevState,
-          latitude: data.data[0]?.latitude ?? 0,
-          longitude: data.data[0]?.longitude ?? 0,
+          latitude: 0,
+          longitude: 0,
         }),
-        (location = data.data[0] ? data.data[0]?.label : undefined)
+        (location = [0,0])
       );
 
       if (location === undefined || location.includes('undefined')) {

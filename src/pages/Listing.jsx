@@ -107,7 +107,7 @@ function Listing() {
           </p>
         )}
 
-        <ul className="listingDetailsList">
+        {/* <ul className="listingDetailsList">
           <li>
             {listing.bedrooms > 1
               ? `${listing.bedrooms}
@@ -121,13 +121,16 @@ function Listing() {
           </li>
           <li>{listing.parking && 'Parking Spot'}</li>
           <li>{listing.furnished && 'Furnished'}</li>
-        </ul>
+        </ul> */}
 
+        <br />
+        <br />
         <br />
 
         {auth.currentUser?.uid !== listing.userRef && (
           <Link
-            to={`/cart/${listing.userRef}?listingName=${listing.name}`}
+            to={`/cart/${params.listingId}/${listing.userRef}`}
+            // to={`/cart/${listing.userRef}?listingName=${listing.name}`}
             className="primaryButton"
           >
             Add to cart

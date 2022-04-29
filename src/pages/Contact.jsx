@@ -15,10 +15,6 @@ function Contact() {
     const getLandlord = async () => {
       const docRef = doc(db, 'users', params.landlordId);
       const docSnap = await getDoc(docRef);
-      console.log('docSnap');
-      console.log(docSnap);
-      console.log('docRef');
-      console.log(docRef);
 
       if (docSnap.exists()) {
         setLandlord(docSnap.data());

@@ -60,15 +60,7 @@ function Cart() {
   const params = useParams();
   const isMounted = useRef(true);
 
-  // Redirect if listing is not user's
-  useEffect(() => {
-      if(listing && listing.userRef !== auth.currentUser.uid) {
-          toast.error('You can not edit that listing')
-          navigate('/')
-      }
-  })
-
-  // Fetch listing to edit
+  // Fetch listing
   useEffect(() => {
     setLoading(true);
     const fetchListing = async () => {
@@ -76,8 +68,13 @@ function Cart() {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setListing(docSnap.data());
-        setFormData({ ...docSnap.data(), address: docSnap.data().location });
+        setFormData({ ...docSnap.data(), id: docSnap.id});
         setLoading(false);
+
+        console.log('old formdata');
+        console.log(docSnap.id);
+        console.log(docSnap.data());
+
       } else {
         navigate('/');
         toast.error('Listing does not exist');
@@ -87,143 +84,47 @@ function Cart() {
     fetchListing();
   }, [params.listingId, navigate]);
 
-  // Sets userRef
-  useEffect(() => {
-    if (isMounted) {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setFormData({ ...formData, userRef: user.uid });
-        } else {
-          navigate('/sign-in');
-        }
-      });
-    }
-
-    return () => {
-      isMounted.current = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted]);
+//   const updateField = async () => {
+//     const docRef = doc(db, 'listings', params.listingId);
+//     const docSnap = await getDoc(docRef);
+//   }
+    let geolocation = {};
+    geolocation.lat = 10;
+    geolocation.lng = 10;
+    let imgUrls = {};
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
     setLoading(true);
 
-    if (discountedPrice >= regularPrice) {
-      setLoading(false);
-      toast.error('Discounted price needs to be less than regular price');
-      return;
-    }
-
-    if (images.length > 6) {
-      setLoading(false);
-      toast.error('Max 6 images');
-      return;
-    }
-
-    let geolocation = {};
-    let location;
-
-    if (geolocationEnabled) {
-      const response = await fetch(
-        // `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`
-        // API_KEY=1464460052555b4bd2bfefce3107d85e
-        `https://api.positionstack.com/v1/forward?access_key=1464460052555b4bd2bfefce3107d85e&query=${address}`
-      );
-
-      //   console.log("location 111:");
-      const data = await response.json();
-      // console.log(data);
-
-      //   geolocation.lat = data.results[0]?.geometry.location.lat ?? 0;
-      //   geolocation.lng = data.results[0]?.geometry.location.lng ?? 0;
-      setFormData(
-        (prevState) => ({
-          ...prevState,
-          latitude: data.data[0]?.latitude ?? 0,
-          longitude: data.data[0]?.longitude ?? 0,
-        }),
-        (location = data.data[0] ? data.data[0]?.label : undefined)
-      );
-
-      if (location === undefined || location.includes('undefined')) {
-        setLoading(false);
-        toast.error('Please enter a correct address');
-        return;
-      }
-    } else {
-      geolocation.lat = latitude;
-      geolocation.lng = longitude;
-    }
-
-    // Store image in firebase
-    const storeImage = async (image) => {
-      return new Promise((resolve, reject) => {
-        const storage = getStorage();
-        const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`;
-
-        const storageRef = ref(storage, 'images/' + fileName);
-
-        const uploadTask = uploadBytesResumable(storageRef, image);
-
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-              case 'paused':
-                console.log('Upload is paused');
-                break;
-              case 'running':
-                console.log('Upload is running');
-                break;
-              default:
-                break;
-            }
-          },
-          (error) => {
-            reject(error);
-          },
-          () => {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              resolve(downloadURL);
-            });
-          }
-        );
-      });
-    };
-
-    const imgUrls = await Promise.all(
-      [...images].map((image) => storeImage(image))
-    ).catch(() => {
-      setLoading(false);
-      toast.error('Images not uploaded');
-      return;
-    });
-
     const formDataCopy = {
-      ...formData,
-      imgUrls,
-      geolocation,
-      timestamp: serverTimestamp(),
-    };
-    console.log(formDataCopy);
+        ...formData,
+        imgUrls,
+        geolocation,
+        timestamp: serverTimestamp(),
+      };
+    // console.log('formData');
+    // console.log(formData);
+    console.log('formData/formDataCopy: new formData');
+    console.log(formData.geolocation.lat);
+    
 
     formDataCopy.location = address;
     delete formDataCopy.images;
     delete formDataCopy.address;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
+    
 
     const docRef = doc(db, 'listings', params.listingId);
-    await updateDoc(docRef, formDataCopy)
+    
+    // await updateDoc(docRef, formDataCopy)
+    await updateDoc(docRef, {
+        offer: false
+      });
     setLoading(false);
     toast.success('Listing saved');
-    navigate(`/category/${formDataCopy.type}/${docRef.id}`);
+    // navigate(`/category/${formDataCopy.type}/${docRef.id}`);
   };
 
   const onMutate = (e) => {
@@ -235,15 +136,7 @@ function Cart() {
     if (e.target.value === 'false') {
       boolean = false;
     }
-
-    // Files
-    if (e.target.files) {
-      console.log(1);
-      setFormData((prevState) => ({
-        ...prevState,
-        images: e.target.files,
-      }));
-    }
+    
 
     // Text/Booleans/Numbers
     if (!e.target.files) {
@@ -254,25 +147,32 @@ function Cart() {
     }
   };
 
+//   const updatePromoCode = async (code) => {
+//     const docRef = doc(db, 'listings', params.listingId);
+//     const docSnap = await getDoc(docRef);
+//     // const newField = {images[0]: true}
+//     await updateDoc(docRef, newField)
+//   }
+
   if (loading) {
     return <Spinner />;
   }
 
   return (
-    <div className="profile">
+    <div className='profile'>
       <header>
-        <p className="pageHeader">Add to cart</p>
+        <p className='pageHeader'>Add to cart</p>
       </header>
 
       <main>
         <form onSubmit={onSubmit}>
             
-          <label className="formLabel">Offer</label>
-          <div className="formButtons">
+          <label className='formLabel'>Offer</label>
+          <div className='formButtons'>
             <button
               className={offer ? 'formButtonActive' : 'formButton'}
-              type="button"
-              id="offer"
+              type='button'
+              id='offer'
               value={true}
               onClick={onMutate}
             >
@@ -282,52 +182,64 @@ function Cart() {
               className={
                 !offer && offer !== null ? 'formButtonActive' : 'formButton'
               }
-              type="button"
-              id="offer"
+              type='button'
+              id='offer'
               value={false}
               onClick={onMutate}
             >
               No
             </button>
           </div>
-          
+
+          <label className='formLabel'>Regular Price</label>
+          <div className='formPriceDiv'>
+            <input
+              className='formInputSmall'
+              type='text'
+              id='regularPrice'
+              value={regularPrice}
+              onChange={onMutate}
+              min='50'
+              max='750000000'
+              required
+            />
+            {/* {<p className='formPriceText'>$</p>} */}
+          </div>
 
           {offer && (
             <>
-              <label className="formLabel">Promotion Code</label>
-              <div className="formPriceDiv">
-                <input
-                  className="formInputSmall"
-                  type="text"
-                  id="discountedPrice"
-                  value={discountedPrice}
-                  onChange={onMutate}
-                  min="50"
-                  max="750000000"
-                  required={offer}
-                />
-                {type === 'dog' && <p className="formPriceText"></p>}
-              </div>
+              <label className='formLabel'>Discounted Price</label>
+              <input
+                className='formInputSmall'
+                type='text'
+                id='discountedPrice'
+                value={discountedPrice}
+                onChange={onMutate}
+                min='50'
+                max='750000000'
+                required={offer}
+              />
+              <label className='formLabel'>Promotion Code</label>
+              <input
+                className='formInputSmall'
+                type='text'
+                id='discountedPrice'
+                value={discountedPrice}
+                onChange={onMutate}
+                min='50'
+                max='750000000'
+                required={offer}
+              />
             </>
           )}
-          <br />
-          <br />
-          <br />
-          <br />
-          <label className="formLabel">
-            Total price
-            {offer
-              ? `: ${regularPrice - discountedPrice}`
-              : ` after discount: ${regularPrice}`}{' '}
-            $
-          </label>
           
-          <button type="submit" className="primaryButton createListingButton">
+          <button type='submit' className='primaryButton createListingButton'>
             Add to Cart
           </button>
         </form>
       </main>
-    </div>)
+    </div>
+  )
 }
 
 export default Cart
