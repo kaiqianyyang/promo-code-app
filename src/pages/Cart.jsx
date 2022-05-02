@@ -110,6 +110,7 @@ function Cart() {
       
     }
   };
+  
 
   if (loading) {
     return <Spinner />;
