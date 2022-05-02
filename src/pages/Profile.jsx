@@ -11,7 +11,7 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase.config';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify'; // npm i react-toastify
 import ListingItem from '../components/ListingItem';
 import arrowRight from '../assets/svg/keyboardArrowRightIcon.svg';
@@ -28,6 +28,7 @@ function Profile() {
   });
 
   const { name, email } = formData;
+  const params = useParams();
 
   const navigate = useNavigate();
 
@@ -97,6 +98,7 @@ function Profile() {
     }));
   };
 
+  // Remove the product from the database
   const onDelete = async (listingId) => {
     if (window.confirm('Are you sure you want to delete?')) {
       await deleteDoc(doc(db, 'listings', listingId));
@@ -163,7 +165,7 @@ function Profile() {
 
       {!loading && listings?.length > 0 && (
         <>
-          <p className="listingText">Products that You Used Promotion Code</p>
+          <p className="listingText">Products that Used Promotion Code</p>
           <ul className="listingsList">
             {listings.map((listing) => (
               <ListingItem

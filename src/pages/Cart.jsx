@@ -21,6 +21,7 @@ function Cart() {
 
   const navigate = useNavigate();
   const params = useParams();
+  let validStatus = false;
 
   // Fetch listing to edit
   useEffect(() => {
@@ -55,7 +56,6 @@ function Cart() {
     };
     console.log(formDataCopy);
 
-    delete formDataCopy.images;
     !formDataCopy.offer && delete formDataCopy.discountedPrice;
 
     const docRef = doc(db, 'listings', params.listingId);
@@ -73,6 +73,7 @@ function Cart() {
     }
     if (e.target.value === 'false') {
       boolean = false;
+      toast.error('The website is only designed for using a promotion code, please select "Yes".')
     }
 
     // Text/Booleans/Numbers
@@ -83,6 +84,7 @@ function Cart() {
           [e.target.id]: boolean ?? e.target.value,
           // ["parking"]: false, // test
         }));
+        validStatus = true
       } 
       else {
         // one-time promo code
